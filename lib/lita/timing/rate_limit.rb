@@ -8,7 +8,7 @@ module Lita
       def once_every(seconds, &block)
         if last_time.nil? || last_time + seconds < Time.now
           yield
-          @redis.set(@name, Time.now.to_i)
+          @redis.set(@name, Time.now.to_i, ex: seconds * 2)
         end
       end
 
