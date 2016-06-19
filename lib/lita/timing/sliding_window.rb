@@ -13,7 +13,7 @@ module Lita
 
         return unless start_time > last_time
 
-        yield last_time, advance_to 
+        yield last_time + 1, advance_to
 
         @redis.set(@name, advance_to.to_i)
       end
