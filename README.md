@@ -32,6 +32,40 @@ class can be used in conjunction with the built in every() helper:
       end
     end
 
+### Scheduled Timing
+
+If you have code that should execute at a fixed time each day or week, Lita::Timing::Scheduled
+can be used in conjunction with the built-in every() helper.
+
+For daily execution:
+
+    one_minute = 60
+    every(one_minute) do
+      Lita::Timing::Scheduled.new("interval-name", redis).daily_at("11:00") do
+        # daily code in here
+      end
+    end
+
+For daily execution on certain days:
+
+    one_minute = 60
+    every(one_minute) do
+      Lita::Timing::Scheduled.new("interval-name", redis).daily_at("11:00", [:monday, :tuesday]) do
+        # daily code in here
+      end
+    end
+
+For weekly execution:
+
+    one_minute = 60
+    every(one_minute) do
+      Lita::Timing::Scheduled.new("interval-name", redis).weekly_at("11:00", :friday) do
+        # weekly code in here
+      end
+    end
+
+All times should be specified in UTC.
+
 ### Sliding Windows
 
 Sometimes a handler wants to periodically execute a block of code with a start
