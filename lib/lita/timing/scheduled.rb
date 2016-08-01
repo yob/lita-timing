@@ -58,7 +58,7 @@ module Lita
 
       def get_last_run_at
         value = @redis.get(@name)
-        value ? Time.at(value.to_i).utc : Time.at(0)
+        value ? Time.at(value.to_i).utc : Time.now.utc
       end
     end
   end
