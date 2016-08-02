@@ -33,10 +33,10 @@ module Lita
       def calc_next_daily_run(time, days, last_run_at)
         hours, minutes = TimeParser.extract_hours_and_minutes(time)
         wdays = TimeParser.day_strings_to_ints(days)
-        
+
         next_run_at = last_run_at + 1
         loop do
-          if next_run_at.hour == hours && next_run_at.min == minutes && wdays.include?(next_run_at.wday)
+          if next_run_at.hour == hours && next_run_at.min == minutes && next_run_at.sec == 0 && wdays.include?(next_run_at.wday)
             return next_run_at
           end
           next_run_at += 1
@@ -46,10 +46,10 @@ module Lita
       def calc_next_weekly_run(time, day, last_run_at)
         hours, minutes = TimeParser.extract_hours_and_minutes(time)
         wday = TimeParser.day_string_to_int(day)
-        
+
         next_run_at = last_run_at + 1
         loop do
-          if next_run_at.hour == hours && next_run_at.min == minutes && next_run_at.wday == wday 
+          if next_run_at.hour == hours && next_run_at.min == minutes && next_run_at.sec == 0 && next_run_at.wday == wday
             return next_run_at
           end
           next_run_at += 1
