@@ -91,6 +91,5 @@ only execute if it's been 30 minutes since the last time it executed.
 
 ## TODO
 
-* Add locking to ensure multiple processes can't execute a block at the same time
 * Add timezone support to Scheduled
 
