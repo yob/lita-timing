@@ -3,19 +3,22 @@ module Lita
     class SlidingWindow
       def initialize(name, redis)
         @name, @redis = name, redis
+        @mutex = Timing::Mutex.new("#{name}-lock", redis)
 
         initialise_last_time_if_not_set
       end
 
       def advance(duration_minutes: 30, buffer_minutes: 0, &block)
-        start_time = Time.now - mins_to_seconds(duration_minutes) - mins_to_seconds(buffer_minutes)
-        advance_to = start_time + mins_to_seconds(duration_minutes)
+        @mutex.syncronise do
+          start_time = Time.now - mins_to_seconds(duration_minutes) - mins_to_seconds(buffer_minutes)
+          advance_to = start_time + mins_to_seconds(duration_minutes)
 
-        return unless start_time > last_time
+          return unless start_time > last_time
 
-        yield last_time + 1, advance_to
+          yield last_time + 1, advance_to
 
-        @redis.set(@name, advance_to.to_i)
+          @redis.set(@name, advance_to.to_i)
+        end
       end
 
       private
@@ -29,7 +32,9 @@ module Lita
       end
 
       def initialise_last_time_if_not_set
-        @redis.setnx(@name, two_weeks_ago.to_i)
+        @mutex.syncronise do
+          @redis.setnx(@name, two_weeks_ago.to_i)
+        end
       end
 
       def two_weeks_ago
