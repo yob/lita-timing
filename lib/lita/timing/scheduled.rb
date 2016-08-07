@@ -1,4 +1,5 @@
 require 'lita/timing/time_parser'
+require 'lita/timing/mutex'
 
 module Lita
   module Timing
@@ -7,24 +8,29 @@ module Lita
 
       def initialize(name, redis)
         @name, @redis = name, redis
+        @mutex = Timing::Mutex.new("#{name}-lock", redis)
       end
 
       def daily_at(time, days = nil, &block)
-        days ||= [:monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday]
-        last_run_at = get_last_run_at
-        next_run = calc_next_daily_run(time, days, last_run_at)
-        if next_run < Time.now
-          yield
-          @redis.set(@name, Time.now.to_i, ex: ONE_WEEK_IN_SECONDS * 2)
+        @mutex.syncronise do
+          days ||= [:monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday]
+          last_run_at = get_last_run_at
+          next_run = calc_next_daily_run(time, days, last_run_at)
+          if next_run < Time.now
+            yield
+            @redis.set(@name, Time.now.to_i, ex: ONE_WEEK_IN_SECONDS * 2)
+          end
         end
       end
 
       def weekly_at(time, day, &block)
-        last_run_at = get_last_run_at
-        next_run = calc_next_weekly_run(time, day, last_run_at)
-        if next_run < Time.now
-          yield
-          @redis.set(@name, Time.now.to_i, ex: ONE_WEEK_IN_SECONDS * 2)
+        @mutex.syncronise do
+          last_run_at = get_last_run_at
+          next_run = calc_next_weekly_run(time, day, last_run_at)
+          if next_run < Time.now
+            yield
+            @redis.set(@name, Time.now.to_i, ex: ONE_WEEK_IN_SECONDS * 2)
+          end
         end
       end
 
