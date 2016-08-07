@@ -1,5 +1,5 @@
 v0.3.0 (XXX)
-* Added support for excuting blocks are a scheduled daily or weekly time
+* Added support for excuting blocks at a scheduled daily or weekly time
 * Add mutexes to ensure code that executes via this gem never runs concurrently
 
 v0.2.0 (19th June 2016)
