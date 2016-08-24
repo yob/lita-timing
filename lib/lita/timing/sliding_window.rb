@@ -11,9 +11,11 @@ module Lita
       def advance(duration_minutes: 30, buffer_minutes: 0, &block)
         @mutex.syncronise do
           start_time = Time.now - mins_to_seconds(duration_minutes) - mins_to_seconds(buffer_minutes)
-          advance_to = start_time + mins_to_seconds(duration_minutes)
+          last_time = get_last_time
 
           return unless start_time > last_time
+
+          advance_to = last_time + mins_to_seconds(duration_minutes)
 
           yield last_time + 1, advance_to
 
@@ -27,7 +29,7 @@ module Lita
         mins * 60
       end
 
-      def last_time
+      def get_last_time
         Time.at(@redis.get(@name).to_i)
       end
 
