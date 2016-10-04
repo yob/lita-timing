@@ -22,7 +22,7 @@ module Lita
       end
 
       def self.extract_hours_and_minutes(string)
-        _, hours, minutes = *string.match(/\A(\d\d):(\d\d)\Z/)
+        _, hours, minutes = *string.match(/\A(\d{1,2}):(\d{2})\Z/)
         if hours.nil? || minutes.nil?
           raise ArgumentError, "time should be HH:MM"
         end

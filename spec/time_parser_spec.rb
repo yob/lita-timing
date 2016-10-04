@@ -67,6 +67,13 @@ RSpec.describe Lita::Timing::TimeParser do
         expect(result).to eq([23,59])
       end
     end
+    context "with H:MM format" do
+      let(:input) { "1:23" }
+
+      it "returns correct values" do
+        expect(result).to eq([1,23])
+      end
+    end
     context "with invalid string" do
       let(:input) { "Foo" }
 
