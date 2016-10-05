@@ -18,7 +18,7 @@ module Lita
           next_run = calc_next_daily_run(time, days, last_run_at)
           if next_run < Time.now
             yield
-            @redis.set(@name, Time.now.to_i, ex: ONE_WEEK_IN_SECONDS * 2)
+            set_last_run_at
           end
         end
       end
@@ -29,7 +29,7 @@ module Lita
           next_run = calc_next_weekly_run(time, day, last_run_at)
           if next_run < Time.now
             yield
-            @redis.set(@name, Time.now.to_i, ex: ONE_WEEK_IN_SECONDS * 2)
+            set_last_run_at
           end
         end
       end
@@ -64,7 +64,12 @@ module Lita
 
       def get_last_run_at
         value = @redis.get(@name)
-        value ? Time.at(value.to_i).utc : Time.now.utc
+        value ? Time.at(value.to_i).utc : set_last_run_at
+      end
+
+      def set_last_run_at(time = Time.now.utc)
+        @redis.set(@name, time.to_i, ex: ONE_WEEK_IN_SECONDS * 2)
+        time
       end
     end
   end
