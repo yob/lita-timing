@@ -1,3 +1,7 @@
+v0.3.2 (5th October 2016)
+* Bug Fix: scheduled times should support single digit hours
+* Bug fix: scheduled times should work as expected on first execution
+
 v0.3.1 (30th August 2016)
 * Bug Fix: ensure sliding windows don't exceed the requested length
 
