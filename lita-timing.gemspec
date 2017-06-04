@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = "lita-timing"
-  spec.version = "0.3.1"
+  spec.version = "0.3.2"
   spec.summary = "Utilities for time related tasks in lita"
   spec.description = "Provides utilities that help with repeating tasks and rate limits"
   spec.license = "MIT"

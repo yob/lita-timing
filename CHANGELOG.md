@@ -1,4 +1,4 @@
-v0.3.2 (5th October 2016)
+v0.3.2 (4th June 2017)
 * Bug Fix: scheduled times should support single digit hours
 * Bug fix: scheduled times should work as expected on first execution
 
